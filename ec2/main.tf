@@ -10,12 +10,17 @@ resource "aws_instance" "web" {
 
   user_data = <<EOT
 #!/bin/bash
-# Install Docker
-sudo apt-get update
-sudo apt-get install -y docker.io
+# Redirect logs for debugging
+exec > /var/log/user-data.log 2>&1
 
-# Login to ECR
-$(aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${var.ecr_repository_url})
+# Update and install Docker
+sudo apt-get update -y
+sudo apt-get install -y docker.io
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# Get AWS ECR login
+aws ecr get-login-password --region ${var.region} | docker login --username AWS --password-stdin ${var.ecr_repository_url}
 
 # Pull and run the Docker container
 docker pull ${var.ecr_repository_url}:latest
