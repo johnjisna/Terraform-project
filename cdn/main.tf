@@ -1,10 +1,20 @@
+resource "random_string" "suffix" {
+  length  = 6
+  special = false
+  upper   = false
+}
+
+
 resource "aws_cloudfront_origin_access_control" "oac" {
-  name                          = var.oac_name
-  description                   = var.oac_description
+  name        = "${var.oac_name}-${random_string.suffix.result}"  
+  description = var.oac_description
+
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
-  signing_protocol                  = "sigv4"
+  signing_protocol                   = "sigv4"
 }
+
+
 
 resource "aws_cloudfront_distribution" "cdn" {
   origin {
@@ -40,15 +50,13 @@ resource "aws_cloudfront_distribution" "cdn" {
   }
 
 viewer_certificate {
-  acm_certificate_arn            = length(var.custom_domain_name) > 0 ? var.acm_certificate_arn : null
-  ssl_support_method             = length(var.custom_domain_name) > 0 ? "sni-only" : null
-  cloudfront_default_certificate = length(var.custom_domain_name) == 0 ? true : null
+  acm_certificate_arn            = var.acm_certificate_arn != "" ? var.acm_certificate_arn : null
+  ssl_support_method             = var.acm_certificate_arn != "" ? "sni-only" : null
+  cloudfront_default_certificate = var.acm_certificate_arn == "" ? true : false
 }
 
+aliases = var.custom_domain_name != "" ? [var.custom_domain_name] : []
 
-
-
-aliases = length(var.custom_domain_name) > 0 ? [var.custom_domain_name] : null
 
 
 
