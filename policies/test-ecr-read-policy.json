@@ -11,8 +11,7 @@
         "ecr:DescribeImages",
         "ecr:GetAuthorizationToken"
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:ecr:${region}:${account_id}:repository/${repository_name}"
     }
   ]
 }
-
