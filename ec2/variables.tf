@@ -1,8 +1,3 @@
-variable "ami" {
-  description = "Amazon Machine Image (AMI) ID"
-  type        = string
-}
-
 variable "instance_type" {
   description = "Instance type"
   type        = string
@@ -27,13 +22,19 @@ variable "region" {
   description = "AWS region"
   type        = string
 }
+
 variable "ecr_repository_url" {
   description = "The URL of the ECR repository"
   type        = string
 }
+
 variable "environment" {
   description = "Environment name (e.g., dev, staging, prod)"
   type        = string
 }
 
-
+variable "EC2_AMI_FILTER" {
+  type        = string
+  default     = "ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"
+  description = "AMI name to be used to create the EC2 instance"
+}
