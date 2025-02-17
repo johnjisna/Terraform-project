@@ -10,8 +10,7 @@
         "ecr:CompleteLayerUpload",
         "ecr:ListImages"
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:ecr:${region}:${account_id}:repository/${repository_name}"
     }
   ]
 }
-
