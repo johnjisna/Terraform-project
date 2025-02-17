@@ -7,5 +7,5 @@ resource "aws_ecr_repository" "this" {
 
   image_tag_mutability = var.image_tag_mutability
 
-  tags = var.tags
+  tags = var.tags != null ? var.tags : {}
 }
