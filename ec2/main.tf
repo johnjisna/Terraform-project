@@ -1,5 +1,5 @@
 resource "aws_instance" "web" {
-  ami                   = var.ami
+  ami                   = data.aws_ami.ubuntu.id
   instance_type         = var.instance_type
   key_name              = var.key_name
 
@@ -26,4 +26,26 @@ aws ecr get-login-password --region ${var.region} | docker login --username AWS 
 docker pull ${var.ecr_repository_url}:latest
 docker run -d --name my-app -p 80:80 ${var.ecr_repository_url}:latest
 EOT
+}
+
+
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = [var.EC2_AMI_FILTER]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+
+  owners = ["099720109477"]
 }
