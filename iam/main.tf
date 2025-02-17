@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_user" "user" {
   name = var.iam_user_name
 }
@@ -6,13 +8,15 @@ resource "aws_iam_policy" "policies" {
   for_each    = var.iam_policies
   name        = each.key
   description = "IAM policy for ${each.key}"
-  policy      = file(each.value)
+  policy      = templatefile("${path.root}/${each.value}", {
+    resource_arn = var.resource_arn_mapping[each.key]
+  })
 }
 
 resource "aws_iam_user_policy_attachment" "policy_attachments" {
-  for_each   = aws_iam_policy.policies
+  for_each   = var.user_policy_mapping
   user       = aws_iam_user.user.name
-  policy_arn = each.value.arn
+  policy_arn = aws_iam_policy.policies[each.key].arn
 }
 
 resource "aws_iam_role" "role" {
@@ -34,7 +38,7 @@ resource "aws_iam_role" "role" {
 }
 
 resource "aws_iam_role_policy_attachment" "role_policy_attachments" {
-  for_each   = var.create_role ? aws_iam_policy.policies : {}
-  role       = var.create_role ? aws_iam_role.role[0].name : ""
-  policy_arn = each.value.arn
+  for_each   = var.create_role ? var.role_policy_mapping : {}
+  role       = aws_iam_role.role[0].name
+  policy_arn = aws_iam_policy.policies[each.key].arn
 }
