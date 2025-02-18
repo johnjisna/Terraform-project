@@ -1,42 +1,31 @@
 variable "acm_certificate_arn" {
   description = "The ARN of the ACM certificate for the custom domain"
   type        = string
-  default     = null  
+  default     = null
 }
 
 variable "custom_domain_name" {
   description = "The custom domain name for the CloudFront distribution"
   type        = string
-  default     = null  
-}
-
-variable "iam_user_name" {
-  description = "Name of the IAM user for S3"
-  type        = string
-  
+  default     = ""
 }
 
 variable "policy_name" {
   description = "Name of the IAM policy"
   type        = string
-  default = "null"
+  default     = "null"
 }
 
 variable "policy_type" {
   description = "access type wheather its a cloudfront or iam user"
   type        = string
-  default = "null"
+  default     = "null"
 }
 
 variable "bucket_name" {
   description = "bucket name"
   type        = string
-  default = "null"
-}
-
-variable "ami" {
-  description = "AMI ID"
-  type        = string
+  default     = "null"
 }
 
 variable "instance_type" {
@@ -100,16 +89,11 @@ variable "project" {
   description = "The project name"
   type        = string
 }
-variable "iam_user_name" {
-  description = "Name of the IAM user for S3"
-  type        = string
-  
-}
 
 variable "iam_role_name" {
   description = "Name of the IAM user for S3"
   type        = string
-  
+
 }
 
 variable "trusted_services" {
@@ -117,18 +101,37 @@ variable "trusted_services" {
   type        = list(string)
 }
 
-variable "create_role_backend" {
-  description = "Set to true to create an IAM role and attach policies to it."
-  type        = bool
-  default     = true
+variable "iam_user_name_backend" {
+  description = "Name of the IAM user backend"
+  type        = string
+
 }
 
-variable "create_role_frontend" {
-  description = "Set to true to create an IAM role and attach policies to it."
-  type        = bool
-  default     = false
+variable "iam_user_name_frontend" {
+  description = "Name of the IAM user frontend"
+  type        = string
+
 }
 
+variable "iam_role_name_backend" {
+  description = "Name of the IAM user backend"
+  type        = string
 
+}
 
+variable "iam_role_name_frontend" {
+  description = "Name of the IAM user frontend"
+  type        = string
 
+}
+
+variable "EC2_AMI_FILTER" {
+  type        = string
+  default     = null
+  description = "AMI name to be used to create the EC2 instance"
+}
+
+variable "ami_id" {
+  description = "The default AMI ID to use if no AMI is found by the filter."
+  type        = string
+}
