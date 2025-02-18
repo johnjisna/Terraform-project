@@ -9,14 +9,10 @@ module "secrets_manager" {
 module "ec2" {
   source             = "./ec2"
   instance_type      = var.instance_type
-  ami_id             = var.ami_id
-  EC2_AMI_FILTER     = var.EC2_AMI_FILTER
   key_name           = var.key_name
   instance_name      = var.instance_name
-  secret_id          = module.secrets_manager.secret_id
-  region             = var.region
   environment        = var.environment
-  ecr_repository_url = module.ecr.repository_url
+  
 }
 
 module "ecr" {
@@ -100,10 +96,3 @@ module "iam_frontend" {
     "cdn_policy" = module.cdn.cdn_arn
   }
 }
-
-
-
-
-
-
-
