@@ -13,11 +13,6 @@ variable "trusted_services" {
   type        = list(string)
 }
 
-variable "create_role" {
-  description = "Flag to determine if IAM role should be created"
-  type        = bool
-}
-
 variable "iam_policies" {
   description = "Map of policy names to policy file paths"
   type        = map(string)
