@@ -20,8 +20,9 @@ resource "aws_iam_user_policy_attachment" "policy_attachments" {
 }
 
 resource "aws_iam_role" "role" {
-  count = var.create_role ? 1 : 0
-  name  = var.iam_role_name
+  for_each = var.iam_role_name != "" ? { "role" = var.iam_role_name } : {}
+
+  name = each.value
 
   assume_role_policy = jsonencode({
     Version   = "2012-10-17",
@@ -38,7 +39,9 @@ resource "aws_iam_role" "role" {
 }
 
 resource "aws_iam_role_policy_attachment" "role_policy_attachments" {
-  for_each   = var.create_role ? var.role_policy_mapping : {}
-  role       = aws_iam_role.role[0].name
+  for_each = var.iam_role_name != "" ? var.role_policy_mapping : {}
+
+  role       = aws_iam_role.role["role"].name  
   policy_arn = aws_iam_policy.policies[each.key].arn
 }
+
