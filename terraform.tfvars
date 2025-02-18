@@ -1,3 +1,5 @@
+ami_id          = "ami-03e31863b8e1f70a5"
+EC2_AMI_FILTER  = "ubuntu/images/hvm-ssd/ubuntu-jammy-24.04-amd64-server-*"
 instance_type = "t2.micro"
 key_name      = "my-key"
 instance_name = "my-ec2-instance"
