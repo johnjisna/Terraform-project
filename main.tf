@@ -79,28 +79,29 @@ module "iam_backend" {
 }
 
 module "iam_frontend" {
-  source           = "./iam"
-  iam_user_name    = var.iam_user_name_frontend
-  iam_role_name    = ""  
-  trusted_services = []  
+  source        = "./iam"
+  iam_user_name = var.iam_user_name_frontend
+ 
 
   iam_policies = {
     "s3_policy"  = "policies/s3_policy.json",
     "cdn_policy" = "policies/cdn_policy.json"
   }
 
+
+
   user_policy_mapping = {
-    "s3_policy"  = module.my_s3_bucket.bucket_arn
+    "s3_policy"  = module.my_s3_bucket.bucket_arn,
     "cdn_policy" = module.cdn.cdn_arn
   }
 
-  role_policy_mapping = {}
-
   resource_arn_mapping = {
-    "s3_policy"  = module.my_s3_bucket.bucket_arn
+    "s3_policy"  = module.my_s3_bucket.bucket_arn,
     "cdn_policy" = module.cdn.cdn_arn
   }
 }
+
+
 
 
 
