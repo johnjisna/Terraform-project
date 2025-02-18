@@ -9,6 +9,8 @@ module "secrets_manager" {
 module "ec2" {
   source             = "./ec2"
   instance_type      = var.instance_type
+  ami_id             = var.ami_id
+  EC2_AMI_FILTER     = var.EC2_AMI_FILTER
   key_name           = var.key_name
   instance_name      = var.instance_name
   secret_id          = module.secrets_manager.secret_id
@@ -50,9 +52,8 @@ module "cdn" {
 module "iam_backend" {
   source           = "./iam"
   iam_user_name    = var.iam_user_name_backend
-  iam_role_name    = var.iam_role_name_backend
+  iam_role_name    = var.iam_role_name_backend  
   trusted_services = var.trusted_services
-  create_role      = var.create_role_backend
 
 
   iam_policies = {
@@ -60,7 +61,6 @@ module "iam_backend" {
     "secret-manager-policy" = "policies/test-secret-manager-policy.json",
     "ecr-read-policy"       = "policies/test-ecr-read-policy.json"
   }
-
 
   user_policy_mapping = {
     "jenkins-user-policy"   = module.cdn.cdn_arn
@@ -70,7 +70,6 @@ module "iam_backend" {
   role_policy_mapping = {
     "ecr-read-policy" = module.ecr.repository_arn
   }
-
 
   resource_arn_mapping = {
     "jenkins-user-policy"   = module.ecr.repository_arn
@@ -82,26 +81,28 @@ module "iam_backend" {
 module "iam_frontend" {
   source           = "./iam"
   iam_user_name    = var.iam_user_name_frontend
-  iam_role_name    = var.iam_role_name_frontend
-  trusted_services = []
-  create_role      = var.create_role_frontend
+  iam_role_name    = ""  
+  trusted_services = []  
 
   iam_policies = {
-    "s3_policy" = "policies/s3_policy.json",
+    "s3_policy"  = "policies/s3_policy.json",
     "cdn_policy" = "policies/cdn_policy.json"
   }
 
   user_policy_mapping = {
-    "s3_policy" = module.my_s3_bucket.bucket_arn
+    "s3_policy"  = module.my_s3_bucket.bucket_arn
     "cdn_policy" = module.cdn.cdn_arn
   }
 
   role_policy_mapping = {}
 
   resource_arn_mapping = {
-    "s3_policy" = module.my_s3_bucket.bucket_arn
-    "cdn_policy" =  module.cdn.cdn_arn
-
-
+    "s3_policy"  = module.my_s3_bucket.bucket_arn
+    "cdn_policy" = module.cdn.cdn_arn
   }
 }
+
+
+
+
+
